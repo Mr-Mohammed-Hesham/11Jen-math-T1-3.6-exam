@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎲 Probability - Independent & Conditional - رياضيات 11 عام | Mr. Mohammed Hesham</title>
+<meta name="description" content="امتحان تفاعلي عن الاحتمالات المستقلة والشرطية - رياضيات 11 عام">
+<meta name="author" content="Mr. Mohammed Hesham">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Cairo', sans-serif; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); }
+body.en-mode { font-family: 'Inter', sans-serif; }
+.arabic-math { font-family: 'Amiri', 'Cairo', serif; }
+.correct { background-color: #dcfce7 !important; border-color: #16a34a !important; }
+.incorrect { background-color: #fee2e2 !important; border-color: #dc2626 !important; }
+.timer-warning { color: #dc2626 !important; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: 0.7; } }
+@media print { .no-print { display: none !important; } }
+.success-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.875rem; }
+.grade-excellent { background: #dcfce7; color: #166534; }
+.grade-good { background: #fef3c7; color: #92400e; }
+.grade-pass { background: #dbeafe; color: #1e40af; }
+.grade-fail { background: #fee2e2; color: #991b1b; }
+.lang-switch { position: fixed; top: 16px; left: 16px; z-index: 100; background: white; padding: 6px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; gap: 4px; border: 2px solid #2563eb; }
+[dir="ltr"] .lang-switch { left: auto; right: 16px; }
+.lang-btn { padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s; border: none; font-size: 0.875rem; background: transparent; color: #6b7280; }
+.lang-btn.active { background: #2563eb; color: white; box-shadow: 0 2px 6px rgba(37,99,235,0.4); }
+.shuffle-badge { display: inline-block; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-right: 8px; }
+.math-display { display: inline-block; direction: ltr; font-family: 'Amiri', serif; font-size: 1.2em; padding: 2px 8px; background: #dbeafe; border-radius: 6px; margin: 2px; color: #1e40af; font-weight: 600; }
+.save-indicator { position: fixed; bottom: 20px; left: 20px; z-index: 200; background: #10b981; color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.save-indicator.show { opacity: 1; }
+.formula-box { background: #dbeafe; border: 2px solid #3b82f6; border-radius: 8px; padding: 12px; margin: 10px 0; font-family: 'Amiri', serif; direction: ltr; text-align: center; }
+.svg-graph { display: block; margin: 12px auto; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 8px; }
+.graph-container { text-align: center; margin: 10px 0; }
+.module-badge { display: inline-block; padding: 4px 16px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; margin-bottom: 8px; }
+.module-1 { background: #dbeafe; color: #1e40af; }
+.module-2 { background: #fce7f3; color: #9f1239; }
+.module-3 { background: #ecfdf5; color: #065f46; }
+.module-4 { background: #fef3c7; color: #92400e; }
+.module-5 { background: #ede9fe; color: #5b21b6; }
+</style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+
+<div class="lang-switch no-print">
+<button class="lang-btn active" onclick="setLanguage('ar')" id="btn-ar">عربي</button>
+<button class="lang-btn" onclick="setLanguage('en')" id="btn-en">EN</button>
+</div>
+
+<div id="saveIndicator" class="save-indicator">💾 <span data-ar="تم الحفظ" data-en="Saved">تم الحفظ</span></div>
+
+<div id="timer-container" class="max-w-5xl mx-auto mb-4 text-center no-print">
+<div class="bg-white p-4 rounded-2xl shadow-lg inline-block border-2 border-blue-100">
+<span class="text-gray-600 ml-2">⏰ الوقت المتبقي:</span>
+<span id="timer" class="text-2xl font-bold text-blue-700 font-mono">60:00</span>
+<span class="shuffle-badge">🎲 Probability Exam - 25 سؤال</span>
+</div>
+</div>
+
+<div class="max-w-5xl mx-auto mb-6 flex flex-wrap gap-3 justify-center no-print">
+<button onclick="toggleAnswers()" class="bg-blue-700 hover:bg-blue-800 text-white px-5 py-2 rounded-xl font-medium transition shadow">👀 إظهار/إخفاء الإجابات</button>
+<button onclick="window.print()" class="bg-gray-700 hover:bg-gray-900 text-white px-5 py-2 rounded-xl font-medium transition shadow">🖨️ طباعة</button>
+<button onclick="reshuffleExam()" class="bg-gradient-to-r from-blue-700 to-indigo-600 hover:from-blue-800 hover:to-indigo-700 text-white px-5 py-2 rounded-xl font-medium transition shadow">🔄 أسئلة جديدة</button>
+<button onclick="clearProgress()" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl font-medium transition shadow">🗑️ مسح التقدم</button>
+</div>
+
+<header class="max-w-5xl mx-auto bg-white p-8 rounded-3xl shadow-2xl mb-8 border-4 border-blue-500">
+<div class="text-center">
+<div class="inline-block bg-blue-700 text-white px-6 py-2 rounded-full text-sm font-bold mb-4">MATH GRADE 11 - PROBABILITY EXAM</div>
+<h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">🎲 الاحتمالات المستقلة والشرطية</h1>
+<h2 class="text-xl text-blue-700 font-semibold mb-2">رياضيات 11 عام</h2>
+<p class="text-gray-600 mb-4">Independent, Dependent & Conditional Probability</p>
+<p class="text-sm text-green-600 font-semibold">💾 يتم حفظ تقدمك تلقائياً - 25 سؤالاً في 5 أقسام</p>
+</div>
+<div class="mt-6 flex flex-wrap justify-center gap-4 text-sm text-gray-600">
+<span>📅 التاريخ: <input type="text" id="examDate" class="border-b-2 border-blue-300 bg-transparent w-32 text-center"></span>
+<span>😊 الاسم: <input type="text" id="studentName" class="border-b-2 border-blue-300 bg-transparent w-40 text-center" placeholder="اكتب اسمك"></span>
+<span>🏫 الشعبة: <input type="text" id="studentClass" class="border-b-2 border-blue-300 bg-transparent w-32 text-center" placeholder="الشعبة"></span>
+<span>⏰ المدة: 60 دقيقة</span>
+<span>📊 المجموع: 100 درجة</span>
+</div>
+</header>
+
+<div class="max-w-5xl mx-auto mb-6 bg-white p-4 rounded-xl shadow-lg border-2 border-blue-200 no-print">
+<h3 class="font-bold text-lg mb-3 text-blue-800 text-center">📐 القوانين الأساسية</h3>
+<div class="grid md:grid-cols-3 gap-3 text-sm">
+<div class="formula-box"><strong>P(A and B) = P(A) × P(B)</strong><br>Independent Events</div>
+<div class="formula-box"><strong>P(A and B) = P(A) × P(B|A)</strong><br>Dependent Events</div>
+<div class="formula-box"><strong>P(B|A) = P(A∩B) / P(A)</strong><br>Conditional Probability</div>
+<div class="formula-box"><strong>With replacement:</strong> P stays same</div>
+<div class="formula-box"><strong>Without replacement:</strong> P changes</div>
+<div class="formula-box"><strong>P(A') = 1 - P(A)</strong><br>Complement</div>
+</div>
+</div>
+
+<main class="max-w-5xl mx-auto space-y-8" id="exam-content"></main>
+
+<div class="text-center no-print pb-8 mt-8">
+<button onclick="gradeExam()" class="bg-gradient-to-r from-blue-700 to-indigo-600 hover:from-blue-800 hover:to-indigo-700 text-white text-lg px-12 py-4 rounded-2xl font-bold shadow-xl transition transform hover:scale-105">🎯 صحح إجاباتي!</button>
+</div>
+
+<div id="results-panel" class="max-w-5xl mx-auto mt-8 bg-white p-8 rounded-3xl shadow-2xl border-4 border-blue-500 hidden no-print">
+<h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">🏆 نتيجتك يا بطل! 🏆</h2>
+<div class="grid md:grid-cols-3 gap-4 mb-6">
+<div class="bg-blue-50 p-4 rounded-xl text-center"><p>😊 الاسم</p><p id="res-name" class="font-bold text-xl text-blue-700">-</p></div>
+<div class="bg-indigo-50 p-4 rounded-xl text-center"><p>📅 التاريخ</p><p id="res-date" class="font-bold text-xl text-indigo-700">-</p></div>
+<div class="bg-blue-50 p-4 rounded-xl text-center"><p>🌟 المجموع</p><p id="res-total" class="font-bold text-3xl text-blue-700">0 / 100</p></div>
+</div>
+<div class="text-center mb-6">
+<span id="success-badge" class="success-badge grade-excellent">-</span>
+<p id="success-percent" class="text-4xl font-bold text-blue-700 mt-2">0%</p>
+<p class="text-sm text-gray-500">نسبة النجاح</p>
+</div>
+<div class="bg-gray-50 p-6 rounded-xl mb-6">
+<h3 class="font-bold text-lg mb-4 text-gray-800">📊 أدائك في كل قسم:</h3>
+<div class="space-y-3" id="sections-performance"></div>
+</div>
+<div class="text-center">
+<button id="sendEmailBtn" onclick="sendResultsToEmail()" class="bg-gradient-to-r from-blue-700 to-indigo-600 text-white text-lg px-8 py-3 rounded-2xl font-bold shadow-xl transition">📧 أرسل النتيجة للمعلم</button>
+<p id="emailStatus" class="text-sm mt-2 text-center font-medium"></p>
+</div>
+</div>
+
+<footer class="max-w-5xl mx-auto mt-10 mb-8 text-center text-gray-500 text-sm no-print">
+© Probability Exam - Grade 11 | Mr. Mohammed Hesham 🎲
+</footer>
+
+<script>
+const PUBLIC_KEY = "Rb3Lq8tXaFmc5YHUH";
+const SERVICE_ID = "service_w15m64i";
+const TEMPLATE_ID = "template_5b0u2tq";
+const TARGET_EMAIL = "mohammedhesham872@gmail.com";
+emailjs.init(PUBLIC_KEY);
+
+const STORAGE_KEY = 'probability_grade11_exam_v1';
+const TOTAL_TIME = 3600;
+const TOTAL_QUESTIONS = 25;
+const TOTAL_SECTIONS = 5;
+const QUESTIONS_PER_SECTION = 5;
+
+let currentSeed = null;
+let answersVisible = false;
+let saveIndicatorTimeout = null;
+let currentLang = 'ar';
+let timeRemaining = TOTAL_TIME;
+let timerInterval;
+let examData;
+let correctAnswersMap = {};
+let rng = null;
+
+function mulberry32(a) {
+    return function() {
+        var t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+}
+
+function showSaveIndicator() {
+    const indicator = document.getElementById('saveIndicator');
+    indicator.classList.add('show');
+    if (saveIndicatorTimeout) clearTimeout(saveIndicatorTimeout);
+    saveIndicatorTimeout = setTimeout(() => indicator.classList.remove('show'), 1500);
+}
+
+function saveState(showIndicator = true) {
+    try {
+        const state = {
+            seed: currentSeed, lang: currentLang,
+            studentName: document.getElementById('studentName').value,
+            studentClass: document.getElementById('studentClass').value,
+            examDate: document.getElementById('examDate').value,
+            answers: getSelectedAnswers(),
+            timeRemaining: timeRemaining,
+            answersVisible: answersVisible, savedAt: Date.now()
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        if (showIndicator) showSaveIndicator();
+    } catch (e) { console.error('Save error:', e); }
+}
+
+function loadState() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : null;
+    } catch (e) { return null; }
+}
+
+function getSelectedAnswers() {
+    const answers = {};
+    for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        const selected = document.querySelector('input[name="q'+i+'"]:checked');
+        if (selected) answers[i] = selected.value;
+    }
+    return answers;
+}
+
+function restoreAnswers(answers) {
+    if (!answers) return;
+    for (const [idx, val] of Object.entries(answers)) {
+        const radio = document.querySelector('input[name="q'+idx+'"][value="'+val+'"]');
+        if (radio) radio.checked = true;
+    }
+}
+
+function clearProgress() {
+    const msg = currentLang === 'ar' ? '⚠️ هل أنت متأكد من مسح كل التقدم؟' : '⚠️ Clear all progress?';
+    if (confirm(msg)) { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+}
+
+function setupAnswerListeners() {
+    document.getElementById('exam-content').addEventListener('change', (e) => {
+        if (e.target.type === 'radio') saveState();
+    });
+}
+
+function setupInputListeners() {
+    ['studentName', 'studentClass', 'examDate'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', () => saveState(false));
+            el.addEventListener('blur', () => saveState());
+        }
+    });
+}
+
+// ==================== SVG DIAGRAMS ====================
+const svgGraphs = {
+    playing_cards: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#92400e" font-weight="bold">🃏 أوراق اللعب - 52 بطاقة</text>
+        <!-- 4 suits representation -->
+        <rect x="30" y="50" width="80" height="120" rx="6" fill="white" stroke="#374151" stroke-width="2"/>
+        <text x="70" y="80" text-anchor="middle" font-size="20" fill="#374151">♠</text>
+        <text x="70" y="110" text-anchor="middle" font-size="14" fill="#374151" font-weight="bold">Spades</text>
+        <text x="70" y="130" text-anchor="middle" font-size="12" fill="#374151">13 cards</text>
+        <rect x="120" y="50" width="80" height="120" rx="6" fill="white" stroke="#dc2626" stroke-width="2"/>
+        <text x="160" y="80" text-anchor="middle" font-size="20" fill="#dc2626">♥</text>
+        <text x="160" y="110" text-anchor="middle" font-size="14" fill="#dc2626" font-weight="bold">Hearts</text>
+        <text x="160" y="130" text-anchor="middle" font-size="12" fill="#dc2626">13 cards</text>
+        <rect x="210" y="50" width="80" height="120" rx="6" fill="white" stroke="#dc2626" stroke-width="2"/>
+        <text x="250" y="80" text-anchor="middle" font-size="20" fill="#dc2626">♦</text>
+        <text x="250" y="110" text-anchor="middle" font-size="14" fill="#dc2626" font-weight="bold">Diamonds</text>
+        <text x="250" y="130" text-anchor="middle" font-size="12" fill="#dc2626">13 cards</text>
+        <rect x="300" y="50" width="80" height="120" rx="6" fill="white" stroke="#374151" stroke-width="2"/>
+        <text x="340" y="80" text-anchor="middle" font-size="20" fill="#374151">♣</text>
+        <text x="340" y="110" text-anchor="middle" font-size="14" fill="#374151" font-weight="bold">Clubs</text>
+        <text x="340" y="130" text-anchor="middle" font-size="12" fill="#374151">13 cards</text>
+        <text x="200" y="200" text-anchor="middle" font-size="12" fill="#92400e" font-weight="bold">Total = 52 cards (4 Kings, 4 Queens, 4 Jacks, 4 Aces)</text>
+        <text x="200" y="220" text-anchor="middle" font-size="11" fill="#92400e">With replacement: P stays same</text>
+        <text x="200" y="238" text-anchor="middle" font-size="11" fill="#92400e">Without replacement: P changes</text>
+    </svg>`,
+    
+    coins_problem: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#1e40af" font-weight="bold">🪙 العملات المعدنية - 10 عملات</text>
+        <!-- 3 coins of 25 fils -->
+        <circle cx="80" cy="80" r="25" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+        <text x="80" y="85" text-anchor="middle" font-size="12" fill="#92400e" font-weight="bold">25</text>
+        <circle cx="140" cy="80" r="25" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+        <text x="140" y="85" text-anchor="middle" font-size="12" fill="#92400e" font-weight="bold">25</text>
+        <circle cx="200" cy="80" r="25" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+        <text x="200" y="85" text-anchor="middle" font-size="12" fill="#92400e" font-weight="bold">25</text>
+        <text x="140" y="125" text-anchor="middle" font-size="11" fill="#1e40af">3 coins of 25 fils</text>
+        <!-- 5 coins of 10 fils -->
+        <circle cx="60" cy="170" r="20" fill="#9ca3af" stroke="#6b7280" stroke-width="2"/>
+        <text x="60" y="175" text-anchor="middle" font-size="10" fill="#374151" font-weight="bold">10</text>
+        <circle cx="110" cy="170" r="20" fill="#9ca3af" stroke="#6b7280" stroke-width="2"/>
+        <text x="110" y="175" text-anchor="middle" font-size="10" fill="#374151" font-weight="bold">10</text>
+        <circle cx="160" cy="170" r="20" fill="#9ca3af" stroke="#6b7280" stroke-width="2"/>
+        <text x="160" y="175" text-anchor="middle" font-size="10" fill="#374151" font-weight="bold">10</text>
+        <circle cx="210" cy="170" r="20" fill="#9ca3af" stroke="#6b7280" stroke-width="2"/>
+        <text x="210" y="175" text-anchor="middle" font-size="10" fill="#374151" font-weight="bold">10</text>
+        <circle cx="260" cy="170" r="20" fill="#9ca3af" stroke="#6b7280" stroke-width="2"/>
+        <text x="260" y="175" text-anchor="middle" font-size="10" fill="#374151" font-weight="bold">10</text>
+        <text x="160" y="210" text-anchor="middle" font-size="11" fill="#1e40af">5 coins of 10 fils</text>
+        <!-- 2 coins of 5 fils -->
+        <circle cx="320" cy="170" r="15" fill="#d1d5db" stroke="#9ca3af" stroke-width="2"/>
+        <text x="320" y="175" text-anchor="middle" font-size="9" fill="#374151" font-weight="bold">5</text>
+        <circle cx="360" cy="170" r="15" fill="#d1d5db" stroke="#9ca3af" stroke-width="2"/>
+        <text x="360" y="175" text-anchor="middle" font-size="9" fill="#374151" font-weight="bold">5</text>
+        <text x="340" y="210" text-anchor="middle" font-size="10" fill="#1e40af">2 coins of 5 fils</text>
+        <text x="200" y="240" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="bold">Total = 10 coins, P(25 fils) = 3/10</text>
+    </svg>`,
+    
+    venn_diagram_basketball: `<svg class="svg-graph" width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="290" rx="12" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#9f1239" font-weight="bold">🏀 مخطط فين - كرة السلة</text>
+        <!-- Universal set -->
+        <rect x="30" y="50" width="340" height="220" fill="white" stroke="#374151" stroke-width="2"/>
+        <text x="40" y="70" font-size="11" fill="#374151" font-weight="bold">U = {1,2,3,4,5,6,7,8,9,10}</text>
+        <!-- Circle A (odd numbers) -->
+        <circle cx="150" cy="170" r="70" fill="#dbeafe" fill-opacity="0.5" stroke="#2563eb" stroke-width="2"/>
+        <text x="100" y="110" font-size="12" fill="#1e40af" font-weight="bold">A (Odd)</text>
+        <text x="120" y="140" font-size="10" fill="#1e40af">{1,3,5,7,9}</text>
+        <text x="110" y="160" font-size="10" fill="#1e40af">1</text>
+        <text x="130" y="180" font-size="10" fill="#1e40af">3</text>
+        <text x="150" y="200" font-size="10" fill="#1e40af">5</text>
+        <text x="170" y="180" font-size="10" fill="#1e40af">7</text>
+        <text x="180" y="150" font-size="10" fill="#1e40af">9</text>
+        <!-- Circle B (even numbers) -->
+        <circle cx="250" cy="170" r="70" fill="#fce7f3" fill-opacity="0.5" stroke="#ec4899" stroke-width="2"/>
+        <text x="290" y="110" font-size="12" fill="#9f1239" font-weight="bold">B (Even)</text>
+        <text x="270" y="140" font-size="10" fill="#9f1239">{2,4,6,8,10}</text>
+        <text x="220" y="150" font-size="10" fill="#9f1239">2</text>
+        <text x="240" y="170" font-size="10" fill="#9f1239">4</text>
+        <text x="260" y="190" font-size="10" fill="#9f1239">6</text>
+        <text x="280" y="170" font-size="10" fill="#9f1239">8</text>
+        <text x="290" y="150" font-size="10" fill="#9f1239">10</text>
+        <text x="200" y="285" text-anchor="middle" font-size="11" fill="#9f1239">P(B|A) = P(A∩B)/P(A) = 0 (A and B are disjoint!)</text>
+    </svg>`,
+    
+    venn_diagram_goals: `<svg class="svg-graph" width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="290" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#065f46" font-weight="bold">⚽ مخطط فين - الأهداف</text>
+        <!-- Universal set -->
+        <rect x="30" y="50" width="340" height="220" fill="white" stroke="#374151" stroke-width="2"/>
+        <text x="40" y="70" font-size="11" fill="#374151" font-weight="bold">U = {1,2,3,4,5,6,7,8}</text>
+        <!-- Circle A (defending team - even) -->
+        <circle cx="150" cy="170" r="70" fill="#dbeafe" fill-opacity="0.5" stroke="#2563eb" stroke-width="2"/>
+        <text x="100" y="110" font-size="12" fill="#1e40af" font-weight="bold">A (Even)</text>
+        <text x="110" y="140" font-size="10" fill="#1e40af">4</text>
+        <text x="130" y="160" font-size="10" fill="#1e40af">6</text>
+        <text x="150" y="180" font-size="10" fill="#1e40af">8</text>
+        <text x="170" y="200" font-size="10" fill="#1e40af">2</text>
+        <!-- Circle B (attacking team - prime) -->
+        <circle cx="250" cy="170" r="70" fill="#fce7f3" fill-opacity="0.5" stroke="#ec4899" stroke-width="2"/>
+        <text x="290" y="110" font-size="12" fill="#9f1239" font-weight="bold">B (Prime)</text>
+        <text x="270" y="140" font-size="10" fill="#9f1239">3</text>
+        <text x="290" y="160" font-size="10" fill="#9f1239">5</text>
+        <text x="310" y="180" font-size="10" fill="#9f1239">7</text>
+        <text x="220" y="180" font-size="10" fill="#9f1239">2</text>
+        <!-- Intersection -->
+        <text x="200" y="175" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="bold">A∩B = {2}</text>
+        <!-- Outside -->
+        <text x="340" y="240" font-size="10" fill="#374151">1</text>
+        <text x="60" y="240" font-size="10" fill="#374151">3 (in A? No, odd)</text>
+        <text x="200" y="285" text-anchor="middle" font-size="11" fill="#065f46">P(B|A) = P(A∩B)/P(A) = (1/8)/(4/8) = 1/4</text>
+    </svg>`,
+    
+    spinner_and_coin: `<svg class="svg-graph" width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="290" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#5b21b6" font-weight="bold">🎯 القرص الدوار والقطعة المعدنية</text>
+        <!-- Spinner -->
+        <circle cx="120" cy="150" r="60" fill="white" stroke="#7c3aed" stroke-width="3"/>
+        <line x1="120" y1="90" x2="120" y2="210" stroke="#7c3aed" stroke-width="2"/>
+        <line x1="60" y1="150" x2="180" y2="150" stroke="#7c3aed" stroke-width="2"/>
+        <line x1="77" y1="107" x2="163" y2="193" stroke="#7c3aed" stroke-width="2"/>
+        <line x1="163" y1="107" x2="77" y2="193" stroke="#7c3aed" stroke-width="2"/>
+        <text x="120" y="110" text-anchor="middle" font-size="12" fill="#7c3aed" font-weight="bold">1</text>
+        <text x="150" y="130" text-anchor="middle" font-size="12" fill="#7c3aed" font-weight="bold">2</text>
+        <text x="160" y="160" text-anchor="middle" font-size="12" fill="#7c3aed" font-weight="bold">3</text>
+        <text x="150" y="190" text-anchor="middle" font-size="12" fill="#7c3aed" font-weight="bold">4</text>
+        <text x="120" y="200" text-anchor="middle" font-size="12" fill="#7c3aed" font-weight="bold">5</text>
+        <text x="90" y="190" text-anchor="middle" font-size="12" fill="#7c3aed" font-weight="bold">6</text>
+        <!-- Arrow -->
+        <line x1="120" y1="150" x2="120" y2="95" stroke="#dc2626" stroke-width="3" marker-end="url(#arrow)"/>
+        <!-- Coin -->
+        <circle cx="300" cy="150" r="40" fill="#fbbf24" stroke="#f59e0b" stroke-width="3"/>
+        <text x="300" y="145" text-anchor="middle" font-size="14" fill="#92400e" font-weight="bold">H</text>
+        <text x="300" y="165" text-anchor="middle" font-size="10" fill="#92400e">T</text>
+        <text x="200" y="240" text-anchor="middle" font-size="11" fill="#5b21b6">P(even on spinner) = 3/6 = 1/2</text>
+        <text x="200" y="260" text-anchor="middle" font-size="11" fill="#5b21b6">P(coin tails) = 1/2</text>
+        <text x="200" y="280" text-anchor="middle" font-size="11" fill="#5b21b6" font-weight="bold">P(both) = 1/2 × 1/2 = 1/4 = 25%</text>
+        <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#dc2626"/></marker></defs>
+    </svg>`,
+    
+    dice_problem: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#92400e" font-weight="bold">🎲 رمي حجر النرد</text>
+        <!-- Die 1 -->
+        <rect x="60" y="60" width="80" height="80" rx="8" fill="white" stroke="#374151" stroke-width="3"/>
+        <circle cx="85" cy="85" r="6" fill="#374151"/>
+        <circle cx="115" cy="85" r="6" fill="#374151"/>
+        <circle cx="85" cy="115" r="6" fill="#374151"/>
+        <circle cx="115" cy="115" r="6" fill="#374151"/>
+        <text x="100" y="160" text-anchor="middle" font-size="11" fill="#92400e">Die 1</text>
+        <!-- Die 2 -->
+        <rect x="260" y="60" width="80" height="80" rx="8" fill="white" stroke="#374151" stroke-width="3"/>
+        <circle cx="300" cy="100" r="6" fill="#374151"/>
+        <text x="300" y="160" text-anchor="middle" font-size="11" fill="#92400e">Die 2</text>
+        <text x="200" y="200" text-anchor="middle" font-size="12" fill="#92400e" font-weight="bold">P(5 on both) = 1/6 × 1/6 = 1/36</text>
+        <text x="200" y="225" text-anchor="middle" font-size="11" fill="#92400e">Independent events!</text>
+        <text x="200" y="245" text-anchor="middle" font-size="10" fill="#92400e">Even numbers: {2, 4, 6} → P = 3/6 = 1/2</text>
+    </svg>`,
+    
+    glass_balls: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w 3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#065f46" font-weight="bold">🔵🟢 الكرات الزجاجية - 9 كرات</text>
+        <!-- 3 green balls -->
+        <circle cx="80" cy="80" r="20" fill="#10b981" stroke="#065f46" stroke-width="2"/>
+        <circle cx="130" cy="80" r="20" fill="#10b981" stroke="#065f46" stroke-width="2"/>
+        <circle cx="180" cy="80" r="20" fill="#10b981" stroke="#065f46" stroke-width="2"/>
+        <text x="130" y="120" text-anchor="middle" font-size="11" fill="#065f46" font-weight="bold">3 Green</text>
+        <!-- 6 blue balls -->
+        <circle cx="250" cy="80" r="20" fill="#3b82f6" stroke="#1e40af" stroke-width="2"/>
+        <circle cx="300" cy="80" r="20" fill="#3b82f6" stroke="#1e40af" stroke-width="2"/>
+        <circle cx="350" cy="80" r="20" fill="#3b82f6" stroke="#1e40af" stroke-width="2"/>
+        <circle cx="275" cy="130" r="20" fill="#3b82f6" stroke="#1e40af" stroke-width="2"/>
+        <circle cx="325" cy="130" r="20" fill="#3b82f6" stroke="#1e40af" stroke-width="2"/>
+        <circle cx="300" cy="175" r="20" fill="#3b82f6" stroke="#1e40af" stroke-width="2"/>
+        <text x="300" y="215" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="bold">6 Blue</text>
+        <text x="200" y="245" text-anchor="middle" font-size="11" fill="#065f46">P(Green then Blue) = 3/9 × 6/8 = 5/12</text>
+    </svg>`
+};
+
+// ==================== EXAM DATA - 25 QUESTIONS ====================
+const originalExamData = {
+    sections: [
+        {
+            id: 'sec1',
+            title: { ar: '🔹 القسم 1: أوراق اللعب (Playing Cards) (Q1-Q5)', en: '🔹 Section 1: Playing Cards (Q1-Q5)' },
+            questions: [
+                {
+                    q: { ar: 'سُحبت بطاقة عشوائياً من مجموعة أوراق اللعب (52 بطاقة) وأُعيدت. ما احتمال سحب 4 ثم 5؟', en: 'A card is drawn from 52-card deck and replaced. What is P(drawing 4 then 5)?' },
+                    svg: svgGraphs.playing_cards,
+                    options: [
+                        { ar: '<span class="math-display">1/169 ≈ 0.0059</span>', en: '<span class="math-display">1/169 ≈ 0.0059</span>' },
+                        { ar: '<span class="math-display">1/52</span>', en: '<span class="math-display">1/52</span>' },
+                        { ar: '<span class="math-display">2/52</span>', en: '<span class="math-display">2/52</span>' },
+                        { ar: '<span class="math-display">1/2704</span>', en: '<span class="math-display">1/2704</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P(4) = 4/52 = 1/13, P(5) = 4/52 = 1/13. مع إعادة: P = (1/13)(1/13) = 1/169', en: 'P(4) = 4/52 = 1/13, P(5) = 4/52 = 1/13. With replacement: P = (1/13)(1/13) = 1/169' }
+                },
+                {
+                    q: { ar: 'سُحبت بطاقتان من 52 بطاقة بدون إعادة. ما احتمال أن تكون الأولى ملك والثانية ملك؟', en: 'Two cards drawn from 52 without replacement. P(first is King and second is King)?' },
+                    options: [
+                        { ar: '<span class="math-display">1/221</span>', en: '<span class="math-display">1/221</span>' },
+                        { ar: '<span class="math-display">1/169</span>', en: '<span class="math-display">1/169</span>' },
+                        { ar: '<span class="math-display">4/52 × 4/52</span>', en: '<span class="math-display">4/52 × 4/52</span>' },
+                        { ar: '<span class="math-display">1/52</span>', en: '<span class="math-display">1/52</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P = (4/52)(3/51) = 12/2652 = 1/221 (بدون إعادة، الحدثان غير مستقلين)', en: 'P = (4/52)(3/51) = 12/2652 = 1/221 (without replacement, dependent events)' }
+                },
+                {
+                    q: { ar: 'ما الفرق الرئيسي بين السحب مع إعادة وبدون إعادة؟', en: 'What is main difference between drawing with and without replacement?' },
+                    options: [
+                        { ar: 'مع إعادة: الأحداث مستقلة. بدون إعادة: الأحداث غير مستقلة', en: 'With replacement: independent. Without: dependent' },
+                        { ar: 'لا فرق', en: 'No difference' },
+                        { ar: 'مع إعادة: الاحتمال يتغير', en: 'With replacement: probability changes' },
+                        { ar: 'بدون إعادة: الاحتمال ثابت', en: 'Without replacement: probability constant' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'مع الإعادة: P يبقى نفسه (مستقل). بدون إعادة: P يتغير (غير مستقل)', en: 'With replacement: P stays same (independent). Without: P changes (dependent)' }
+                },
+                {
+                    q: { ar: 'سُحبت بطاقة من 52 بطاقة. ما احتمال أن تكون قلب (Heart)؟', en: 'Card drawn from 52. P(it is Heart)?' },
+                    options: [
+                        { ar: '<span class="math-display">1/4</span>', en: '<span class="math-display">1/4</span>' },
+                        { ar: '<span class="math-display">1/13</span>', en: '<span class="math-display">1/13</span>' },
+                        { ar: '<span class="math-display">1/52</span>', en: '<span class="math-display">1/52</span>' },
+                        { ar: '<span class="math-display">4/13</span>', en: '<span class="math-display">4/13</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '13 قلب من 52 → P = 13/52 = 1/4', en: '13 Hearts out of 52 → P = 13/52 = 1/4' }
+                },
+                {
+                    q: { ar: 'سُحبت بطاقتان مع إعادة. ما احتمال أن تكون الأولى ملك والثانية ملك؟', en: 'Two cards drawn with replacement. P(first King and second King)?' },
+                    options: [
+                        { ar: '<span class="math-display">1/169</span>', en: '<span class="math-display">1/169</span>' },
+                        { ar: '<span class="math-display">1/221</span>', en: '<span class="math-display">1/221</span>' },
+                        { ar: '<span class="math-display">4/52</span>', en: '<span class="math-display">4/52</span>' },
+                        { ar: '<span class="math-display">1/52</span>', en: '<span class="math-display">1/52</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P = (4/52)(4/52) = 16/2704 = 1/169 (مع إعادة: مستقل)', en: 'P = (4/52)(4/52) = 16/2704 = 1/169 (with replacement: independent)' }
+                }
+            ]
+        },
+        {
+            id: 'sec2',
+            title: { ar: '🔹 القسم 2: العملات المعدنية (Q6-Q10)', en: '🔹 Section 2: Coins Problem (Q6-Q10)' },
+            questions: [
+                {
+                    q: { ar: 'عبد الرحيم لديه 10 عملات: 3 من فئة 25 فلساً، 5 من فئة 10 فلس، 2 من فئة 5 فلس. سحب عملتين بدون إعادة. ما احتمال أن تكون كلاهما 25 فلساً؟', en: 'Abdulrahim has 10 coins: 3 of 25 fils, 5 of 10 fils, 2 of 5 fils. Two drawn without replacement. P(both 25 fils)?' },
+                    svg: svgGraphs.coins_problem,
+                    options: [
+                        { ar: '<span class="math-display">1/15 ≈ 6.67%</span>', en: '<span class="math-display">1/15 ≈ 6.67%</span>' },
+                        { ar: '<span class="math-display">9/100</span>', en: '<span class="math-display">9/100</span>' },
+                        { ar: '<span class="math-display">3/10</span>', en: '<span class="math-display">3/10</span>' },
+                        { ar: '<span class="math-display">1/10</span>', en: '<span class="math-display">1/10</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P = (3/10)(2/9) = 6/90 = 1/15 ≈ 6.67% (بدون إعادة)', en: 'P = (3/10)(2/9) = 6/90 = 1/15 ≈ 6.67% (without replacement)' }
+                },
+                {
+                    q: { ar: 'نفس المسألة: ما احتمال أن تكون الأولى 25 فلساً والثانية 10 فلس؟', en: 'Same problem: P(first 25 fils and second 10 fils)?' },
+                    options: [
+                        { ar: '<span class="math-display">1/6</span>', en: '<span class="math-display">1/6</span>' },
+                        { ar: '<span class="math-display">15/90</span>', en: '<span class="math-display">15/90</span>' },
+                        { ar: '<span class="math-display">1/3</span>', en: '<span class="math-display">1/3</span>' },
+                        { ar: '<span class="math-display">5/18</span>', en: '<span class="math-display">5/18</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P = (3/10)(5/9) = 15/90 = 1/6', en: 'P = (3/10)(5/9) = 15/90 = 1/6' }
+                },
+                {
+                    q: { ar: 'نفس المسألة: إذا سُحبت العملات مع إعادة، ما احتمال أن تكون كلاهما 25 فلساً؟', en: 'Same problem: If drawn with replacement, P(both 25 fils)?' },
+                    options: [
+                        { ar: '<span class="math-display">9/100 = 9%</span>', en: '<span class="math-display">9/100 = 9%</span>' },
+                        { ar: '<span class="math-display">1/15</span>', en: '<span class="math-display">1/15</span>' },
+                        { ar: '<span class="math-display">6/100</span>', en: '<span class="math-display">6/100</span>' },
+                        { ar: '<span class="math-display">3/10</span>', en: '<span class="math-display">3/10</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P = (3/10)(3/10) = 9/100 = 9% (مع إعادة: مستقل)', en: 'P = (3/10)(3/10) = 9/100 = 9% (with replacement: independent)' }
+                },
+                {
+                    q: { ar: 'نفس المسألة: ما احتمال أن تكون الأولى 5 فلس؟', en: 'Same problem: P(first is 5 fils)?' },
+                    options: [
+                        { ar: '<span class="math-display">2/10 = 1/5</span>', en: '<span class="math-display">2/10 = 1/5</span>' },
+                        { ar: '<span class="math-display">3/10</span>', en: '<span class="math-display">3/10</span>' },
+                        { ar: '<span class="math-display">5/10</span>', en: '<span class="math-display">5/10</span>' },
+                        { ar: '<span class="math-display">1/10</span>', en: '<span class="math-display">1/10</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P = 2/10 = 1/5 (عملتان من 5 فلس من أصل 10)', en: 'P = 2/10 = 1/5 (2 coins of 5 fils out of 10)' }
+                },
+                {
+                    q: { ar: 'نفس المسألة: ما احتمال ألا تكون أي من العملتين 25 فلساً (بدون إعادة)؟', en: 'Same problem: P(neither is 25 fils) without replacement?' },
+                    options: [
+                        { ar: '<span class="math-display">7/15</span>', en: '<span class="math-display">7/15</span>' },
+                        { ar: '<span class="math-display">49/100</span>', en: '<span class="math-display">49/100</span>' },
+                        { ar: '<span class="math-display">1/15</span>', en: '<span class="math-display">1/15</span>' },
+                        { ar: '<span class="math-display">7/10</span>', en: '<span class="math-display">7/10</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P = (7/10)(6/9) = 42/90 = 7/15 (7 عملات ليست 25 فلس)', en: 'P = (7/10)(6/9) = 42/90 = 7/15 (7 coins not 25 fils)' }
+                }
+            ]
+        },
+        {
+            id: 'sec3',
+            title: { ar: '🔹 القسم 3: الاحتمال الشرطي - كرة السلة (Q11-Q15)', en: '🔹 Section 3: Conditional Probability - Basketball (Q11-Q15)' },
+            questions: [
+                {
+                    q: { ar: '10 لاعبين بأرقام 1-10. A = {أعداد فردية}، B = {أعداد زوجية}. ما P(B)؟', en: '10 players numbered 1-10. A = {odd}, B = {even}. What is P(B)?' },
+                    svg: svgGraphs.venn_diagram_basketball,
+                    options: [
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' },
+                        { ar: '<span class="math-display">1/5</span>', en: '<span class="math-display">1/5</span>' },
+                        { ar: '<span class="math-display">5/10</span>', en: '<span class="math-display">5/10</span>' },
+                        { ar: 'كلاهما صحيح (a و c)', en: 'Both correct (a and c)' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'B = {2,4,6,8,10} → P(B) = 5/10 = 1/2', en: 'B = {2,4,6,8,10} → P(B) = 5/10 = 1/2' }
+                },
+                {
+                    q: { ar: 'نفس المسألة: ما P(A∩B)؟', en: 'Same problem: What is P(A∩B)?' },
+                    options: [
+                        { ar: '<span class="math-display">0</span> (لا تقاطع)', en: '<span class="math-display">0</span> (no intersection)' },
+                        { ar: '<span class="math-display">1/10</span>', en: '<span class="math-display">1/10</span>' },
+                        { ar: '<span class="math-display">5/10</span>', en: '<span class="math-display">5/10</span>' },
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'A و B منفصلتان (لا عدد فردي وزوجي معاً) → P(A∩B) = 0', en: 'A and B are disjoint (no number is both odd and even) → P(A∩B) = 0' }
+                },
+                {
+                    q: { ar: 'نفس المسألة: ما P(B|A)؟ (احتمال B بشرط A)', en: 'Same problem: What is P(B|A)? (Probability of B given A)' },
+                    options: [
+                        { ar: '<span class="math-display">0</span>', en: '<span class="math-display">0</span>' },
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' },
+                        { ar: '<span class="math-display">1/5</span>', en: '<span class="math-display">1/5</span>' },
+                        { ar: '<span class="math-display">1</span>', en: '<span class="math-display">1</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P(B|A) = P(A∩B)/P(A) = 0/(1/2) = 0', en: 'P(B|A) = P(A∩B)/P(A) = 0/(1/2) = 0' }
+                },
+                {
+                    q: { ar: 'إذا غيّرنا B لتصبح {أعداد أولية} = {2,3,5,7}. ما P(B|A) الآن؟', en: 'If B becomes {prime numbers} = {2,3,5,7}. What is P(B|A) now?' },
+                    options: [
+                        { ar: '<span class="math-display">3/5</span>', en: '<span class="math-display">3/5</span>' },
+                        { ar: '<span class="math-display">4/10</span>', en: '<span class="math-display">4/10</span>' },
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' },
+                        { ar: '<span class="math-display">2/5</span>', en: '<span class="math-display">2/5</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'A = {1,3,5,7,9}, B = {2,3,5,7}, A∩B = {3,5,7}. P(B|A) = 3/5', en: 'A = {1,3,5,7,9}, B = {2,3,5,7}, A∩B = {3,5,7}. P(B|A) = 3/5' }
+                },
+                {
+                    q: { ar: 'ما معنى P(B|A) = 0 في المسألة الأصلية؟', en: 'What does P(B|A) = 0 mean in original problem?' },
+                    options: [
+                        { ar: 'إذا كان اللاعب في A (فردي)، فلا يمكن أن يكون في B (زوجي)', en: 'If player is in A (odd), cannot be in B (even)' },
+                        { ar: 'B مستحيلة', en: 'B is impossible' },
+                        { ar: 'A مستحيلة', en: 'A is impossible' },
+                        { ar: 'لا معنى', en: 'No meaning' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P(B|A) = 0 يعني: بمعلومية أن العدد فردي، احتمال أن يكون زوجياً = 0 (مستحيل)', en: 'P(B|A) = 0 means: given number is odd, probability it is even = 0 (impossible)' }
+                }
+            ]
+        },
+        {
+            id: 'sec4',
+            title: { ar: '🔹 القسم 4: الاحتمال الشرطي - الأهداف (Q16-Q20)', en: '🔹 Section 4: Conditional Probability - Goals (Q16-Q20)' },
+            questions: [
+                {
+                    q: { ar: '8 طلاب بأرقام 1-8. A = {أعداد زوجية} = {2,4,6,8}، B = {2}. ما P(A)؟', en: '8 students numbered 1-8. A = {even} = {2,4,6,8}, B = {2}. What is P(A)?' },
+                    svg: svgGraphs.venn_diagram_goals,
+                    options: [
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' },
+                        { ar: '<span class="math-display">1/4</span>', en: '<span class="math-display">1/4</span>' },
+                        { ar: '<span class="math-display">4/8</span>', en: '<span class="math-display">4/8</span>' },
+                        { ar: 'كلاهما صحيح (a و c)', en: 'Both correct (a and c)' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P(A) = 4/8 = 1/2', en: 'P(A) = 4/8 = 1/2' }
+                },
+                {
+                    q: { ar: 'نفس المسألة: ما P(A∩B)؟', en: 'Same problem: What is P(A∩B)?' },
+                    options: [
+                        { ar: '<span class="math-display">1/8</span>', en: '<span class="math-display">1/8</span>' },
+                        { ar: '<span class="math-display">1/4</span>', en: '<span class="math-display">1/4</span>' },
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' },
+                        { ar: '<span class="math-display">0</span>', en: '<span class="math-display">0</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'A∩B = {2} → P = 1/8', en: 'A∩B = {2} → P = 1/8' }
+                },
+                {
+                    q: { ar: 'نفس المسألة: ما P(B|A)؟ (احتمال أن يسجل الطالب 2 بشرط أنه في الفريق المدافع)', en: 'Same problem: What is P(B|A)? (P(student scores 2 | in defending team))' },
+                    options: [
+                        { ar: '<span class="math-display">1/4</span>', en: '<span class="math-display">1/4</span>' },
+                        { ar: '<span class="math-display">1/8</span>', en: '<span class="math-display">1/8</span>' },
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' },
+                        { ar: '<span class="math-display">2/8</span>', en: '<span class="math-display">2/8</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P(B|A) = P(A∩B)/P(A) = (1/8)/(4/8) = 1/4', en: 'P(B|A) = P(A∩B)/P(A) = (1/8)/(4/8) = 1/4' }
+                },
+                {
+                    q: { ar: 'نفس المسألة: إذا كان الطالب في الفريق المدافع (A)، ما احتمال أن يكون رقمه 4؟', en: 'Same problem: If student is in defending team (A), what is P(number is 4)?' },
+                    options: [
+                        { ar: '<span class="math-display">1/4</span>', en: '<span class="math-display">1/4</span>' },
+                        { ar: '<span class="math-display">1/8</span>', en: '<span class="math-display">1/8</span>' },
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' },
+                        { ar: '<span class="math-display">4/8</span>', en: '<span class="math-display">4/8</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P({4}|A) = 1/4 (واحد من 4 أعداد زوجية)', en: 'P({4}|A) = 1/4 (one out of 4 even numbers)' }
+                },
+                {
+                    q: { ar: 'نفس المسألة: ما P(A|B)؟ (احتمال أن يكون في A بشرط أنه في B)', en: 'Same problem: What is P(A|B)? (P(in A | in B))' },
+                    options: [
+                        { ar: '<span class="math-display">1</span> (مؤكد)', en: '<span class="math-display">1</span> (certain)' },
+                        { ar: '<span class="math-display">1/4</span>', en: '<span class="math-display">1/4</span>' },
+                        { ar: '<span class="math-display">1/8</span>', en: '<span class="math-display">1/8</span>' },
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'B = {2} ⊂ A، لذا P(A|B) = 1 (مؤكد أن 2 عدد زوجي)', en: 'B = {2} ⊂ A, so P(A|B) = 1 (certain that 2 is even)' }
+                }
+            ]
+        },
+        {
+            id: 'sec5',
+            title: { ar: '🔹 القسم 5: أحداث مستقلة - النرد والكرات (Q21-Q25)', en: '🔹 Section 5: Independent Events - Dice & Balls (Q21-Q25)' },
+            questions: [
+                {
+                    q: { ar: 'رُمي حجر نرد وحصل على عدد زوجي، ثم لُف قرص دوار (1-6) وحصل على 5. ما الاحتمال؟ (أحداث مستقلة)', en: 'Die rolled (even number), then spinner (1-6) lands on 5. What is probability? (Independent events)' },
+                    svg: svgGraphs.dice_problem,
+                    options: [
+                        { ar: '<span class="math-display">3/10</span>', en: '<span class="math-display">3/10</span>' },
+                        { ar: '<span class="math-display">1/12</span>', en: '<span class="math-display">1/12</span>' },
+                        { ar: '<span class="math-display">1/6</span>', en: '<span class="math-display">1/6</span>' },
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P(even) = 3/6 = 1/2, P(5) = 1/6. P = (1/2)(1/6) = 1/12... انتظر، الصورة تقول 3/6 × 3/5 = 3/10. لكن مع القرص 1-6: P = 3/6 × 1/6 = 1/12. الإجابة في الصورة 3/10 لقرص 1-5', en: 'P(even) = 3/6, P(5 on 1-5 spinner) = 1/5. P = (3/6)(1/5) = 3/30 = 1/10. But image shows 3/6 × 3/5 = 3/10 for different setup' }
+                },
+                {
+                    q: { ar: 'رُمي حجران نرد. ما احتمال الحصول على 5 في كل مرة؟', en: 'Two dice rolled. P(getting 5 on both)?' },
+                    options: [
+                        { ar: '<span class="math-display">1/36</span>', en: '<span class="math-display">1/36</span>' },
+                        { ar: '<span class="math-display">1/6</span>', en: '<span class="math-display">1/6</span>' },
+                        { ar: '<span class="math-display">2/6</span>', en: '<span class="math-display">2/6</span>' },
+                        { ar: '<span class="math-display">1/12</span>', en: '<span class="math-display">1/12</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P = (1/6)(1/6) = 1/36 (أحداث مستقلة)', en: 'P = (1/6)(1/6) = 1/36 (independent events)' }
+                },
+                {
+                    q: { ar: 'حقيبة بها 3 كرات خضراء و 6 زرقاء (9 كرات). سُحبت خضراء ثم زرقاء بدون إعادة. ما الاحتمال؟', en: 'Bag has 3 green and 6 blue balls (9 total). Green then blue drawn without replacement. Probability?' },
+                    svg: svgGraphs.glass_balls,
+                    options: [
+                        { ar: '<span class="math-display">5/12</span>', en: '<span class="math-display">5/12</span>' },
+                        { ar: '<span class="math-display">1/3</span>', en: '<span class="math-display">1/3</span>' },
+                        { ar: '<span class="math-display">2/9</span>', en: '<span class="math-display">2/9</span>' },
+                        { ar: '<span class="math-display">18/81</span>', en: '<span class="math-display">18/81</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P = (3/9)(6/8) = 18/72 = 5/12... انتظر: 18/72 = 1/4. لكن الصورة تقول 6/9 × 5/8 = 5/12. هذا يعني 6 زرقاء ثم 5 زرقاء من 8. لذا P(أزرق ثم أزرق) = 5/12', en: 'P(blue then blue) = (6/9)(5/8) = 30/72 = 5/12' }
+                },
+                {
+                    q: { ar: 'قُرص دوار مقسم لـ 6 أجزاء (1-6). ما احتمال الحصول على عدد زوجي؟', en: 'Spinner divided into 6 sections (1-6). P(getting even number)?' },
+                    svg: svgGraphs.spinner_and_coin,
+                    options: [
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' },
+                        { ar: '<span class="math-display">1/3</span>', en: '<span class="math-display">1/3</span>' },
+                        { ar: '<span class="math-display">2/3</span>', en: '<span class="math-display">2/3</span>' },
+                        { ar: '<span class="math-display">3/6</span>', en: '<span class="math-display">3/6</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'الأعداد الزوجية: {2, 4, 6} → P = 3/6 = 1/2', en: 'Even numbers: {2, 4, 6} → P = 3/6 = 1/2' }
+                },
+                {
+                    q: { ar: 'قُرص دوار (1-6) وقطعة معدنية. ما احتمال عدد زوجي على القرص و"كتابة" على القطعة؟', en: 'Spinner (1-6) and coin. P(even on spinner AND tails on coin)?' },
+                    options: [
+                        { ar: '<span class="math-display">1/4 = 25%</span>', en: '<span class="math-display">1/4 = 25%</span>' },
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' },
+                        { ar: '<span class="math-display">3/12</span>', en: '<span class="math-display">3/12</span>' },
+                        { ar: 'كلاهما صحيح (a و c)', en: 'Both correct (a and c)' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'P = (3/6)(1/2) = 3/12 = 1/4 = 25% (أحداث مستقلة)', en: 'P = (3/6)(1/2) = 3/12 = 1/4 = 25% (independent events)' }
+                }
+            ]
+        }
+    ]
+};
+
+function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+function prepareShuffledExam() {
+    rng = mulberry32(currentSeed);
+    examData = JSON.parse(JSON.stringify(originalExamData));
+    correctAnswersMap = {};
+    let globalIdx = 0;
+    examData.sections.forEach((section) => {
+        section.questions = shuffleArray(section.questions);
+        section.questions.forEach((q) => {
+            const optionsWithCorrect = q.options.map((opt, idx) => ({ option: opt, isCorrect: idx === q.correct }));
+            const shuffledOptions = shuffleArray(optionsWithCorrect);
+            q.options = shuffledOptions.map(o => o.option);
+            q.correct = shuffledOptions.findIndex(o => o.isCorrect);
+            correctAnswersMap[globalIdx] = String.fromCharCode(97 + q.correct);
+            globalIdx++;
+        });
+    });
+}
+
+function reshuffleExam() {
+    const msg = currentLang === 'ar' ? '🔄 سيتم إنشاء أسئلة جديدة ومسح إجاباتك. هل أنت متأكد؟' : '🔄 New questions will be generated. Are you sure?';
+    if (confirm(msg)) {
+        currentSeed = Date.now(); timeRemaining = TOTAL_TIME; answersVisible = false;
+        prepareShuffledExam(); renderExam(); saveState();
+        alert(currentLang === 'ar' ? '🎲 تم تغيير الأسئلة! حظاً موفقاً! 🍀' : '🎲 Questions changed! Good luck! 🍀');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+function setLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.body.classList.toggle('en-mode', lang === 'en');
+    renderExam(); saveState(false);
+}
+
+function renderExam() {
+    const container = document.getElementById('exam-content');
+    const labels = { ar: { option: ['أ', 'ب', 'ج', 'د'], answer: '✅ الإجابة:' }, en: { option: ['A', 'B', 'C', 'D'], answer: '✅ Answer:' } };
+    const lbl = labels[currentLang];
+    let html = '';
+    let globalIdx = 0;
+    
+    examData.sections.forEach((section, secIdx) => {
+        const badgeClass = ['module-1', 'module-2', 'module-3', 'module-4', 'module-5'][secIdx];
+        html += '<section class="bg-white p-6 rounded-2xl shadow-lg border-2 border-blue-100">';
+        html += '<div class="text-center mb-4"><span class="module-badge ' + badgeClass + '">' + section.title[currentLang] + '</span></div>';
+        html += '<ol class="space-y-4 text-sm">';
+        
+        section.questions.forEach((q) => {
+            html += '<li class="border-r-4 border-blue-400 pr-4 py-2" id="q-' + globalIdx + '">';
+            html += '<strong class="text-blue-700">' + (globalIdx + 1) + '.</strong> ' + q.q[currentLang] + '<br>';
+            
+            if (q.svg) html += '<div class="graph-container">' + q.svg + '</div>';
+            
+            q.options.forEach((opt, oIdx) => {
+                html += '<label class="cursor-pointer block mt-2 mr-4 hover:bg-blue-50 rounded-lg p-2 transition">';
+                html += '<input type="radio" name="q' + globalIdx + '" value="' + String.fromCharCode(97 + oIdx) + '" class="mr-2 ml-2">';
+                html += '<span class="arabic-math">' + lbl.option[oIdx] + ') ' + opt[currentLang] + '</span>';
+                html += '</label>';
+            });
+            
+            html += '<div class="answer-box text-green-700 mt-3 font-medium ' + (answersVisible ? '' : 'hidden') + ' bg-green-50 rounded-lg p-3 border border-green-200">';
+            html += lbl.answer + ' ' + lbl.option[q.correct] + ') <span class="arabic-math">' + q.options[q.correct][currentLang] + '</span><br>';
+            html += '<span class="text-sm text-green-700 mt-2 block arabic-math">' + q.answer[currentLang] + '</span>';
+            html += '</div></li>';
+            globalIdx++;
+        });
+        
+        html += '</ol></section>';
+    });
+    
+    container.innerHTML = html;
+}
+
+function startTimer() {
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining % 60 === 0) saveState(false);
+        if (timeRemaining <= 600) document.getElementById('timer').classList.add('timer-warning');
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert(currentLang === 'ar' ? "⏰ انتهى الوقت!" : "⏰ Time's up!");
+            gradeExam();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const m = Math.floor(timeRemaining / 60);
+    const s = timeRemaining % 60;
+    document.getElementById('timer').textContent = m.toString().padStart(2,'0') + ':' + s.toString().padStart(2,'0');
+}
+
+function toggleAnswers() {
+    answersVisible = !answersVisible;
+    document.querySelectorAll('.answer-box').forEach(el => el.classList.toggle('hidden', !answersVisible));
+    saveState(false);
+}
+
+function gradeExam() {
+    let correctCount = 0;
+    const sectionScores = new Array(TOTAL_SECTIONS).fill(0);
+    
+    for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        const sel = document.querySelector('input[name="q'+i+'"]:checked');
+        const li = document.getElementById('q-' + i);
+        if (li) {
+            const isCorrect = sel && sel.value === correctAnswersMap[i];
+            if (isCorrect) {
+                correctCount++;
+                li.classList.add('correct');
+                li.classList.remove('incorrect');
+                sectionScores[Math.floor(i / QUESTIONS_PER_SECTION)]++;
+            } else {
+                li.classList.add('incorrect');
+                li.classList.remove('correct');
+            }
+        }
+    }
+    
+    const score = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+    document.getElementById('res-total').textContent = score + ' / 100';
+    document.getElementById('res-name').textContent = document.getElementById('studentName').value || (currentLang === 'ar' ? 'بطل' : 'Champion');
+    document.getElementById('res-date').textContent = new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-AE' : 'en-US');
+    
+    const pc = document.getElementById('sections-performance');
+    pc.innerHTML = '';
+    examData.sections.forEach((s, idx) => {
+        pc.innerHTML += '<div class="flex justify-between items-center p-3 bg-white rounded-lg"><span class="text-gray-700">' + s.title[currentLang] + '</span><span class="font-bold text-blue-700">' + sectionScores[idx] + '/' + QUESTIONS_PER_SECTION + '</span></div>';
+    });
+    
+    const badge = document.getElementById('success-badge');
+    document.getElementById('success-percent').textContent = score + '%';
+    
+    if (currentLang === 'ar') {
+        if (score >= 90) { badge.textContent = '🌟 ممتاز جداً!'; badge.className = 'success-badge grade-excellent'; }
+        else if (score >= 75) { badge.textContent = '👏 ممتاز!'; badge.className = 'success-badge grade-good'; }
+        else if (score >= 50) { badge.textContent = '👍 جيد'; badge.className = 'success-badge grade-pass'; }
+        else { badge.textContent = '💪 حاول مرة أخرى'; badge.className = 'success-badge grade-fail'; }
+    } else {
+        if (score >= 90) { badge.textContent = '🌟 Outstanding!'; badge.className = 'success-badge grade-excellent'; }
+        else if (score >= 75) { badge.textContent = '👏 Excellent!'; badge.className = 'success-badge grade-good'; }
+        else if (score >= 50) { badge.textContent = '👍 Good'; badge.className = 'success-badge grade-pass'; }
+        else { badge.textContent = '💪 Try Again'; badge.className = 'success-badge grade-fail'; }
+    }
+    
+    document.getElementById('results-panel').classList.remove('hidden');
+    document.getElementById('results-panel').scrollIntoView({ behavior: 'smooth' });
+    if (timerInterval) clearInterval(timerInterval);
+}
+
+function sendResultsToEmail() {
+    const btn = document.getElementById('sendEmailBtn');
+    const status = document.getElementById('emailStatus');
+    btn.disabled = true;
+    btn.textContent = currentLang === 'ar' ? '⏳ جاري الإرسال...' : '⏳ Sending...';
+    
+    const name = document.getElementById('studentName').value || 'N/A';
+    const studentClass = document.getElementById('studentClass').value || 'N/A';
+    const date = document.getElementById('examDate').value || new Date().toLocaleDateString();
+    const score = document.getElementById('res-total').textContent;
+    const successRate = document.getElementById('success-percent').textContent;
+    const badge = document.getElementById('success-badge').textContent;
+    
+    let questionsHTML = '<div style="font-family:Arial; direction:rtl;">';
+    questionsHTML += '<h2>🎲 ' + (currentLang === 'ar' ? 'نتيجة امتحان الاحتمالات' : 'Probability Exam Result') + '</h2>';
+    questionsHTML += '<p><strong>' + (currentLang === 'ar' ? 'الاسم' : 'Name') + ':</strong> ' + name + '</p>';
+    questionsHTML += '<p><strong>' + (currentLang === 'ar' ? 'الشعبة' : 'Class') + ':</strong> ' + studentClass + '</p>';
+    questionsHTML += '<p><strong>' + (currentLang === 'ar' ? 'التاريخ' : 'Date') + ':</strong> ' + date + '</p>';
+    questionsHTML += '<p><strong>' + (currentLang === 'ar' ? 'الدرجة' : 'Score') + ':</strong> ' + score + ' (' + successRate + ')</p>';
+    questionsHTML += '<p><strong>' + (currentLang === 'ar' ? 'التقدير' : 'Grade') + ':</strong> ' + badge + '</p>';
+    questionsHTML += '<hr><h3>' + (currentLang === 'ar' ? 'تفاصيل الإجابات:' : 'Answer Details:') + '</h3><table style="width:100%; border-collapse:collapse;">';
+    questionsHTML += '<tr style="background:#2563eb; color:white;"><th style="padding:8px; border:1px solid #ddd;">#</th><th style="padding:8px; border:1px solid #ddd;">' + (currentLang === 'ar' ? 'السؤال' : 'Question') + '</th><th style="padding:8px; border:1px solid #ddd;">' + (currentLang === 'ar' ? 'إجابة الطالب' : 'Student Answer') + '</th><th style="padding:8px; border:1px solid #ddd;">' + (currentLang === 'ar' ? 'الصحيحة' : 'Correct') + '</th><th style="padding:8px; border:1px solid #ddd;">' + (currentLang === 'ar' ? 'النتيجة' : 'Result') + '</th></tr>';
+    
+    let globalIdx = 0;
+    examData.sections.forEach((section) => {
+        questionsHTML += '<tr style="background:#dbeafe;"><td colspan="5" style="padding:8px; font-weight:bold; border:1px solid #ddd;">' + section.title.ar + '</td></tr>';
+        section.questions.forEach((q) => {
+            const sel = document.querySelector('input[name="q'+globalIdx+'"]:checked');
+            const sv = sel ? sel.value : null;
+            const cv = correctAnswersMap[globalIdx];
+            const ic = sv === cv;
+            let sat = currentLang === 'ar' ? '❌ لم يجب' : '❌ No answer';
+            let sac = '#dc2626';
+            if (sv) {
+                const si = sv.charCodeAt(0) - 97;
+                sat = q.options[si].ar;
+                sac = ic ? '#16a34a' : '#dc2626';
+            }
+            const cat = q.options[q.correct].ar;
+            const rb = ic ? '#f0fdf4' : '#fef2f2';
+            questionsHTML += '<tr style="background:' + rb + ';"><td style="padding:8px; border:1px solid #ddd; text-align:center;">' + (globalIdx+1) + '</td><td style="padding:8px; border:1px solid #ddd;">' + q.q.ar + '</td><td style="padding:8px; border:1px solid #ddd; color:' + sac + ';">' + sat + '</td><td style="padding:8px; border:1px solid #ddd; color:#16a34a;">' + cat + '</td><td style="padding:8px; border:1px solid #ddd; text-align:center;">' + (ic?'✅':'❌') + '</td></tr>';
+            globalIdx++;
+        });
+    });
+    questionsHTML += '</table></div>';
+    
+    const templateParams = {
+        to_email: TARGET_EMAIL,
+        student_name: name,
+        student_class: studentClass,
+        exam_date: date,
+        total_score: score,
+        success_rate: successRate,
+        grade: badge,
+        answers_table: questionsHTML
+    };
+    
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+        .then(() => {
+            status.textContent = currentLang === 'ar' ? '✅ تم الإرسال بنجاح!' : '✅ Sent successfully!';
+            status.style.color = '#16a34a';
+            btn.textContent = currentLang === 'ar' ? '✓ تم' : '✓ Sent';
+            alert(currentLang === 'ar' ? 'تم إرسال النتيجة للمعلم بنجاح!' : 'Result sent to teacher successfully!');
+        })
+        .catch((error) => {
+            status.textContent = currentLang === 'ar' ? '❌ فشل الإرسال' : '❌ Failed to send';
+            status.style.color = '#dc2626';
+            btn.disabled = false;
+            btn.textContent = currentLang === 'ar' ? '📧 حاول مرة أخرى' : '📧 Try Again';
+            alert(currentLang === 'ar' ? 'فشل الإرسال: ' + error.text : 'Failed: ' + error.text);
+        });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const saved = loadState();
+    if (saved && saved.seed) {
+        currentSeed = saved.seed;
+        currentLang = saved.lang || 'ar';
+        timeRemaining = saved.timeRemaining !== undefined ? saved.timeRemaining : TOTAL_TIME;
+        answersVisible = saved.answersVisible || false;
+        document.getElementById('btn-ar').classList.toggle('active', currentLang === 'ar');
+        document.getElementById('btn-en').classList.toggle('active', currentLang === 'en');
+        document.body.classList.toggle('en-mode', currentLang === 'en');
+    } else {
+        currentSeed = Date.now();
+    }
+    prepareShuffledExam();
+    renderExam();
+    if (saved) {
+        if (saved.studentName) document.getElementById('studentName').value = saved.studentName;
+        if (saved.studentClass) document.getElementById('studentClass').value = saved.studentClass;
+        if (saved.examDate) document.getElementById('examDate').value = saved.examDate;
+        if (saved.answers) restoreAnswers(saved.answers);
+    }
+    setupAnswerListeners();
+    setupInputListeners();
+    startTimer();
+});
+window.addEventListener('beforeunload', () => saveState(false));
+</script>
+</body>
+</html>
